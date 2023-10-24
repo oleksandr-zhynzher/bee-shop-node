@@ -3,19 +3,28 @@ import { middyfy } from "@libs/lambda";
 import { productService } from "src/services";
 
 export const productDetailsHandler = async (event) => {
-  const { productId } = event.pathParameters;
-  const product = productService.getProductById(productId);
+  console.log('Get Product Details Triggred, params = ', event.pathParameters);
 
-  return product
-    ? formatJSONResponse({
-        product,
-      })
-    : formatJSONResponse(
-        {
-          message: "Product not found",
-        },
-        404
-      );
+  try {
+    const { productId } = event.pathParameters;
+    const product = await productService.getProductById(productId);
+
+    return product
+      ? formatJSONResponse({
+          product,
+        })
+      : formatJSONResponse(
+          {
+            message: "Product not found",
+          },
+          404
+        );
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: "Internal Server Error" }),
+    };
+  }
 };
 
 export const main = middyfy(productDetailsHandler);

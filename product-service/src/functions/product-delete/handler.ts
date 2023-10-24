@@ -3,17 +3,26 @@ import { middyfy } from "@libs/lambda";
 import { productService } from "src/services";
 
 export const deleteProductHandler = async (event) => {
-  const { productId } = event.pathParameters;
-  const isDeleted = productService.deleteProduct(productId);
+  console.log('Delete Product Triggred, params = ', event.pathParameters);
 
-  return isDeleted
-    ? formatJSONResponse({}, 204)
-    : formatJSONResponse(
-        {
-          message: "Product not found",
-        },
-        404
-      );
+  try {
+    const { productId } = event.pathParameters;
+    const isDeleted = await productService.deleteProduct(productId);
+
+    return isDeleted
+      ? formatJSONResponse({}, 204)
+      : formatJSONResponse(
+          {
+            message: "Product not found",
+          },
+          404
+        );
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: "Internal Server Error" }),
+    };
+  }
 };
 
 export const main = middyfy(deleteProductHandler);

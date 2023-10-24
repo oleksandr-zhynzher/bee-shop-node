@@ -20,7 +20,27 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
       NODE_OPTIONS: "--enable-source-maps --stack-trace-limit=1000",
+      PRODUCTS_TABLE: "bee_shop_products",
+      PRODUCTS_STOCKS_TABLE: "bee_shop_stocks",
     },
+    iamRoleStatements: [
+      {
+        Effect: "Allow",
+        Action: "dynamodb:PutItem",
+        Resource: [
+          "arn:aws:dynamodb:eu-west-1:815248906089:table/bee_shop_products",
+          "arn:aws:dynamodb:eu-west-1:815248906089:table/bee_shop_stocks",
+        ],
+      },
+      {
+        Effect: "Allow",
+        Action: "dynamodb:Scan",
+        Resource: [
+          "arn:aws:dynamodb:eu-west-1:815248906089:table/bee_shop_products",
+          "arn:aws:dynamodb:eu-west-1:815248906089:table/bee_shop_stocks",
+        ],
+      },
+    ],
   },
   functions: {
     productList,
@@ -35,7 +55,7 @@ const serverlessConfiguration: AWS = {
       bundle: true,
       minify: false,
       sourcemap: true,
-      exclude: ["aws-sdk"],
+      exclude: [],
       target: "node18",
       define: { "require.resolve": undefined },
       platform: "node",

@@ -2,22 +2,25 @@ import { Product } from "src/interfaces";
 import { productRepository } from "src/repositories";
 
 class ProductService {
-  getAllProducts(): Product[] {
-    return productRepository.getAllProducts();
+  async getAllProducts(): Promise<Product[]> {
+    return await productRepository.getAllProductsWithStocks();
   }
-  getProductById(id: string): Product | undefined {
-    return productRepository.getProductById(id);
+  async getProductById(id: string): Promise<Product | undefined> {
+    return await productRepository.getProductById(id);
   }
-  createProduct(product: Product): Product {
-    return productRepository.createProduct(product);
-  }
-
-  updateProduct(id: string, product: Product): Product | undefined {
-    return productRepository.updateProduct(id, product);
+  async createProduct(product: Product): Promise<Product> {
+    return await productRepository.createProduct(product);
   }
 
-  deleteProduct(id: string): boolean {
-    return productRepository.deleteProduct(id);
+  async updateProduct(
+    id: string,
+    product: Product
+  ): Promise<Product | undefined> {
+    return await productRepository.updateProduct(id, product);
+  }
+
+  async deleteProduct(id: string): Promise<boolean> {
+    return await productRepository.deleteProduct(id);
   }
 }
 
