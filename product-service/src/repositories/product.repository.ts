@@ -14,13 +14,18 @@ class ProductRepository {
       {
         Put: {
           TableName: this.PRODUCTS_TABLE,
-          Item: product,
+          Item: {
+            id: product.id,
+            description: product.description,
+            price: product.price,
+            title: product.title,
+          },
         },
       },
       {
         Put: {
           TableName: this.PRODUCTS_STOCKS_TABLE,
-          Item: { product_id: product.id, count: 0 },
+          Item: { product_id: product.id, count: product.count },
         },
       },
     ];
@@ -37,7 +42,6 @@ class ProductRepository {
       TableName: this.PRODUCTS_TABLE,
       Key: { id },
     };
-    console.log("I HERE BROW!");
 
     const result = await dynamoDb.get(params).promise();
     return (result.Item as Product) || null;

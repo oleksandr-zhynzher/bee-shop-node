@@ -3,7 +3,7 @@ import { middyfy } from "@libs/lambda";
 import { productService } from "src/services";
 
 export const productDetailsHandler = async (event) => {
-  console.log('Get Product Details Triggred, params = ', event.pathParameters);
+  console.log("Get Product Details Triggred, params = ", event.pathParameters);
 
   try {
     const { productId } = event.pathParameters;
@@ -22,7 +22,7 @@ export const productDetailsHandler = async (event) => {
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: "Internal Server Error" }),
+      body: JSON.stringify({ message: "Internal Server Error", error }),
     };
   }
 };
