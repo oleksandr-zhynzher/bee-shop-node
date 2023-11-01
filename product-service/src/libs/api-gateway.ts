@@ -21,9 +21,9 @@ export const formatJSONResponse = (
     statusCode: statusCode,
     body: JSON.stringify(response),
     headers: {
-      "Access-Control-Allow-Headers": "Content-Type",
+      "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
     },
   };
 };

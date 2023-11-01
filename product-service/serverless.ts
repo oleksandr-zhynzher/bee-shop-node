@@ -2,6 +2,7 @@ import createProduct from "@functions/product-create";
 import deleteProduct from "@functions/product-delete";
 import productDetails from "@functions/product-details";
 import productList from "@functions/product-list";
+import populateWithMockData from "@functions/product-populate-mock";
 import updateProduct from "@functions/product-update";
 import type { AWS } from "@serverless/typescript";
 
@@ -20,7 +21,35 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
       NODE_OPTIONS: "--enable-source-maps --stack-trace-limit=1000",
+      PRODUCTS_TABLE: "bee_shop_products",
+      PRODUCTS_STOCKS_TABLE: "bee_shop_stocks",
     },
+    iamRoleStatements: [
+      {
+        Effect: "Allow",
+        Action: ["dynamodb:PutItem", "dynamodb:GetItem"],
+        Resource: [
+          "arn:aws:dynamodb:eu-west-1:815248906089:table/bee_shop_products",
+          "arn:aws:dynamodb:eu-west-1:815248906089:table/bee_shop_stocks",
+        ],
+      },
+      {
+        Effect: "Allow",
+        Action: "dynamodb:Scan",
+        Resource: [
+          "arn:aws:dynamodb:eu-west-1:815248906089:table/bee_shop_products",
+          "arn:aws:dynamodb:eu-west-1:815248906089:table/bee_shop_stocks",
+        ],
+      },
+      {
+        Effect: "Allow",
+        Action: ["s3:PutObject", "s3:GetObject", "s3:ListBucket"],
+        Resource: [
+          "arn:aws:s3:::product-mock-import",
+          "arn:aws:s3:::product-mock-import/*",
+        ],
+      },
+    ],
   },
   functions: {
     productList,
@@ -28,6 +57,17 @@ const serverlessConfiguration: AWS = {
     createProduct,
     deleteProduct,
     updateProduct,
+    populateWithMockData,
+  },
+  resources: {
+    Resources: {
+      ProductMockImportBucket: {
+        Type: "AWS::S3::Bucket",
+        Properties: {
+          BucketName: "product-mock-import",
+        },
+      },
+    },
   },
   package: { individually: true },
   custom: {
@@ -35,7 +75,7 @@ const serverlessConfiguration: AWS = {
       bundle: true,
       minify: false,
       sourcemap: true,
-      exclude: ["aws-sdk"],
+      exclude: [],
       target: "node18",
       define: { "require.resolve": undefined },
       platform: "node",

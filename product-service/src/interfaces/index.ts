@@ -3,5 +3,10 @@ export interface Product {
   title: string;
   description: string;
   price: number;
-  count?: number;
+  count: number;
+}
+
+export interface Stock {
+  product_id: string;
+  count: number;
 }

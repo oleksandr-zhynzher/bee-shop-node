@@ -1,12 +1,12 @@
 import { handlerPath } from "@libs/handler-resolver";
 
-const createProduct = {
+const populateWithMockData = {
   handler: `${handlerPath(__dirname)}/handler.main`,
   events: [
     {
       http: {
-        method: "post",
-        path: "products",
+        method: "get",
+        path: "products/import/mock",
         cors: {
           origin: "*",
           allowCredentials: false,
@@ -16,4 +16,4 @@ const createProduct = {
   ],
 };
 
-export default createProduct;
+export default populateWithMockData;
